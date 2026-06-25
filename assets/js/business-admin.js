@@ -123,6 +123,10 @@
         historyPanel.hidden = false;
         historyPanel.innerHTML =
           "<h3>" + escapeHtml(company.company_name) + " — Karten-Code: " + escapeHtml(company.card_code) + "</h3>" +
+          "<p><strong>Ansprechpartner:</strong> " + escapeHtml(company.contact_person || "-") + "<br>" +
+          "<strong>E-Mail:</strong> " + escapeHtml(company.email || "-") + "<br>" +
+          "<strong>Telefon:</strong> " + escapeHtml(company.phone || "-") + "<br>" +
+          "<strong>Notizen:</strong> " + escapeHtml(company.notes || "-") + "</p>" +
           "<p><strong>Punktestand:</strong> " + company.points_balance + "</p>" +
           (rows
             ? '<table class="data-table"><thead><tr><th>Datum</th><th>Punkte</th><th>Grund</th></tr></thead><tbody>' + rows + "</tbody></table>"
