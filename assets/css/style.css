@@ -471,9 +471,13 @@ p { margin: 0 0 1em; color: var(--color-text-soft); }
 .btn--lg { padding: 18px 34px; font-size: 1.05rem; }
 .mk-hero__note { margin-top: 20px; font-size: 0.88rem; color: var(--color-text-soft); }
 
-.mk-landing-hero { padding: 170px 0 90px; background: linear-gradient(180deg, #fff 0%, var(--color-bg-soft) 100%); overflow: hidden; }
-.mk-landing-hero__grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 56px; align-items: center; }
-.mk-landing-hero h1 { font-size: clamp(2.1rem, 4vw, 3.2rem); margin-bottom: 18px; }
+.mk-landing-hero { position: relative; padding: 170px 0 90px; overflow: hidden; color: #fff; }
+.mk-landing-hero__bg { position: absolute; inset: 0; background-size: cover; background-position: center; z-index: 0; }
+.mk-landing-hero__bg::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(10,10,10,0.88) 0%, rgba(10,10,10,0.92) 55%, rgba(10,10,10,0.97) 100%); }
+.mk-landing-hero__grid { position: relative; z-index: 1; display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 56px; align-items: center; }
+.mk-landing-hero h1 { font-size: clamp(2.1rem, 4vw, 3.2rem); margin-bottom: 18px; color: #fff; }
+.mk-landing-hero .lead { color: rgba(255,255,255,0.85); }
+.mk-landing-hero .mk-hero__note { color: rgba(255,255,255,0.6); }
 @media (max-width: 880px) { .mk-landing-hero__grid { grid-template-columns: 1fr; } .mk-landing-hero { padding: 150px 0 60px; } }
 
 .mk-hero__card-wrap { display: flex; justify-content: center; perspective: 1200px; }
@@ -515,6 +519,26 @@ p { margin: 0 0 1em; color: var(--color-text-soft); }
 
 .perk-tile { transition: transform 0.2s ease, box-shadow 0.2s ease; }
 .perk-tile:hover { transform: translateY(-6px); box-shadow: 0 20px 40px rgba(0,0,0,0.12); }
+.icon-badge--lg { width: 64px; height: 64px; font-size: 1.7rem; border-radius: 18px; background: linear-gradient(135deg, rgba(232,89,12,0.16), rgba(232,89,12,0.06)); }
+
+.combo-card { overflow: hidden; padding-top: 0 !important; }
+.combo-card img { width: calc(100% + 64px); margin: 0 -32px 18px; height: 180px; object-fit: cover; display: block; }
+.combo-card .tag { margin-bottom: 10px; }
+
+.savings-bars { display: flex; flex-direction: column; gap: 16px; margin-bottom: 28px; }
+.savings-bar-row { display: flex; align-items: center; gap: 14px; }
+.savings-bar-label { width: 150px; flex-shrink: 0; font-size: 0.85rem; color: rgba(255,255,255,0.75); text-align: right; }
+.savings-bar-track { flex: 1; height: 14px; border-radius: 99px; background: rgba(255,255,255,0.1); overflow: hidden; }
+.savings-bar { height: 100%; width: 0; border-radius: 99px; transition: width 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.2s; }
+.savings-bar--full { background: rgba(255,255,255,0.4); }
+.savings-bar--discounted { background: var(--color-primary); }
+.reveal.is-visible .savings-bar--full { width: 100%; }
+.reveal.is-visible .savings-bar--discounted { width: 80%; }
+.savings-bar-value { width: 80px; flex-shrink: 0; font-weight: 700; font-family: var(--ff-head); font-size: 0.92rem; }
+@media (max-width: 640px) {
+  .savings-bar-label { width: 100px; font-size: 0.75rem; }
+  .savings-bar-value { width: 64px; font-size: 0.8rem; }
+}
 
 .perk-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 14px; }
 .perk-list li { display: flex; align-items: center; gap: 14px; font-weight: 500; }
