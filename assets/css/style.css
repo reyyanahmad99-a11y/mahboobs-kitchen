@@ -448,3 +448,12 @@ p { margin: 0 0 1em; color: var(--color-text-soft); }
 .modal-box { background: #fff; border-radius: var(--radius); box-shadow: var(--shadow); max-width: 560px; width: 100%; padding: 36px; position: relative; max-height: 90vh; overflow-y: auto; }
 .modal-box img { width: 100%; height: 240px; object-fit: cover; border-radius: var(--radius); margin-bottom: 20px; display: block; }
 .modal-close { position: absolute; top: 16px; right: 16px; background: none; border: none; font-size: 1.6rem; cursor: pointer; color: var(--color-text-soft); line-height: 1; padding: 4px 8px; }
+
+.mk-card { max-width: 380px; aspect-ratio: 1.586; padding: 28px 30px; border-radius: 18px; background: linear-gradient(135deg, #232323 0%, #0d0d0d 60%, #2b2b2b 100%); box-shadow: var(--shadow); color: #fff; display: flex; flex-direction: column; justify-content: space-between; position: relative; overflow: hidden; }
+.mk-card::after { content: ""; position: absolute; inset: 0; background: linear-gradient(120deg, rgba(232,89,12,0.18), transparent 55%); pointer-events: none; }
+.mk-card__top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.mk-card__logo { height: 30px; width: auto; }
+.mk-card__label { font-family: var(--ff-head); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-primary); font-weight: 700; }
+.mk-card__number { font-family: var(--ff-head); font-size: 1.4rem; letter-spacing: 0.12em; margin-top: 18px; }
+.mk-card__name { font-size: 0.95rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em; opacity: 0.85; margin-top: 6px; }
+@media (max-width: 480px) { .mk-card { max-width: 100%; } }
