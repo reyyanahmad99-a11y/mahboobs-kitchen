@@ -23,12 +23,30 @@
   }
 
   if (presenterParam) {
+    client.auth.getSession().then(function (res) {
+      var session = res.data && res.data.session;
+      if (!session) {
+        window.location.href = "/business/login/?redirect=" + encodeURIComponent(window.location.pathname + window.location.search);
+        return;
+      }
+      window.mkBusiness.getProfile(session.user.id).then(function (profile) {
+        if (!profile || profile.role !== "admin") {
+          window.location.href = "/business/login/";
+          return;
+        }
+        startPresenting();
+      });
+    });
+  }
+
+  function startPresenting() {
     var code = presenterParam === "new" ? randomCode() : presenterParam;
     if (presenterParam === "new") {
       var url = new URL(window.location.href);
       url.searchParams.set("presenter", code);
       window.history.replaceState({}, "", url.toString());
     }
+    var instanceId = randomCode();
 
     var viewerUrl = window.location.origin + "/business/?viewer=" + code;
     var bar = document.getElementById("presenterBar");
@@ -38,7 +56,7 @@
     var channel = client.channel("presentation-" + code);
 
     function sendPosition() {
-      channel.send({ type: "broadcast", event: "scroll", payload: { percent: currentPercent() } });
+      channel.send({ type: "broadcast", event: "scroll", payload: { percent: currentPercent(), instanceId: instanceId } });
     }
 
     channel.subscribe(function (status) {
@@ -73,7 +91,7 @@
     });
 
     document.getElementById("presenterEndBtn").addEventListener("click", function () {
-      channel.send({ type: "broadcast", event: "end", payload: {} });
+      channel.send({ type: "broadcast", event: "end", payload: { instanceId: instanceId } });
       clearInterval(heartbeat);
       channel.unsubscribe();
       bar.hidden = true;
@@ -84,12 +102,17 @@
     var banner = document.getElementById("viewerBanner");
     banner.hidden = false;
 
+    var lockedInstanceId = null;
+
     var viewChannel = client.channel("presentation-" + viewerParam);
     viewChannel.on("broadcast", { event: "scroll" }, function (msg) {
+      if (!lockedInstanceId) lockedInstanceId = msg.payload.instanceId;
+      if (msg.payload.instanceId !== lockedInstanceId) return;
       var max = document.documentElement.scrollHeight - window.innerHeight;
       window.scrollTo(0, (msg.payload.percent || 0) * max);
     });
-    viewChannel.on("broadcast", { event: "end" }, function () {
+    viewChannel.on("broadcast", { event: "end" }, function (msg) {
+      if (lockedInstanceId && msg.payload.instanceId !== lockedInstanceId) return;
       banner.hidden = true;
       viewChannel.unsubscribe();
     });
