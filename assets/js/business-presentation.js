@@ -78,19 +78,15 @@
   if (viewerParam) {
     var banner = document.getElementById("viewerBanner");
     var bannerText = document.getElementById("viewerBannerText");
-    banner.hidden = false;
 
     var lockedInstanceId = null;
-    var waitingTimeout = setTimeout(function () {
-      if (!lockedInstanceId) banner.hidden = true;
-    }, 12000);
 
     var viewChannel = client.channel(CHANNEL_NAME);
     viewChannel.on("broadcast", { event: "scroll" }, function (msg) {
       if (!lockedInstanceId) {
         lockedInstanceId = msg.payload.instanceId;
-        clearTimeout(waitingTimeout);
         bannerText.textContent = "🔴 Live-Präsentation aktiv – wird gerade von Mahboobs Kitchen geführt";
+        banner.hidden = false;
       }
       if (msg.payload.instanceId !== lockedInstanceId) return;
       var max = document.documentElement.scrollHeight - window.innerHeight;
