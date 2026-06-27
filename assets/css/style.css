@@ -482,9 +482,9 @@ p { margin: 0 0 1em; color: var(--color-text-soft); }
   grid-template-areas: "heading card" "body card";
   gap: 56px; align-items: center;
 }
-.mk-hero__heading { grid-area: heading; }
-.mk-hero__card-wrap { grid-area: card; }
-.mk-hero__body { grid-area: body; }
+.mk-landing-hero__grid .mk-hero__heading { grid-area: heading; }
+.mk-landing-hero__grid .mk-hero__card-wrap { grid-area: card; }
+.mk-landing-hero__grid .mk-hero__body { grid-area: body; }
 .mk-landing-hero h1 { font-size: clamp(2.1rem, 4vw, 3.2rem); margin-bottom: 18px; color: #fff; }
 .mk-landing-hero .lead { color: rgba(255,255,255,0.85); }
 .mk-landing-hero .mk-hero__note { color: rgba(255,255,255,0.6); }
@@ -535,8 +535,9 @@ p { margin: 0 0 1em; color: var(--color-text-soft); }
 .perk-tile { transition: transform 0.2s ease, box-shadow 0.2s ease; }
 .perk-tile:hover { transform: translateY(-6px); box-shadow: 0 20px 40px rgba(0,0,0,0.12); }
 
-.combo-card { overflow: hidden; padding-top: 0 !important; }
-.combo-card img { width: calc(100% + 64px); margin: 0 -32px 18px; height: 180px; object-fit: cover; display: block; }
+.combo-card { overflow: hidden; padding: 0 !important; }
+.combo-card img { width: 100%; height: 180px; object-fit: cover; display: block; }
+.combo-card__body { padding: 24px 32px 32px; }
 .combo-card .tag { margin-bottom: 10px; }
 @media (max-width: 640px) { .combo-card img { height: 220px; } }
 .combo-menu { list-style: none; margin: 14px 0 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
