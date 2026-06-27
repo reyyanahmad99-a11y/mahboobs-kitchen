@@ -592,7 +592,9 @@ p { margin: 0 0 1em; color: var(--color-text-soft); }
 .section--dark .perk-tile .icon-badge { font-family: var(--ff-head); font-weight: 800; }
 
 .presentation-banner { position: fixed; top: 0; left: 0; right: 0; z-index: 300; background: var(--color-primary); color: #fff; text-align: center; font-weight: 700; padding: 10px 16px; font-size: 0.88rem; }
+.presentation-banner[hidden] { display: none; }
 .presentation-bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 300; background: #0d0d0d; color: #fff; padding: 16px 20px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px; box-shadow: 0 -8px 24px rgba(0,0,0,0.3); }
+.presentation-bar[hidden] { display: none; }
 .presentation-bar__info { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 .presentation-bar__link { font-size: 0.78rem; color: rgba(255,255,255,0.6); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 60vw; }
 .presentation-bar__actions { display: flex; flex-wrap: wrap; gap: 10px; }
