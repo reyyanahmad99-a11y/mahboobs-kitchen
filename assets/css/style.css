@@ -604,3 +604,15 @@ p { margin: 0 0 1em; color: var(--color-text-soft); }
   .presentation-bar__link { max-width: 100%; }
   .presentation-bar__actions { flex-direction: column; }
 }
+
+.mk-gallery__track { display: flex; gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 8px 24px 24px; scrollbar-width: none; }
+.mk-gallery__track::-webkit-scrollbar { display: none; }
+.mk-gallery__slide { flex: 0 0 auto; width: 320px; height: 220px; scroll-snap-align: start; border-radius: 14px; overflow: hidden; }
+.mk-gallery__slide img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.mk-gallery__nav { display: flex; gap: 12px; justify-content: flex-end; margin-top: -8px; }
+.mk-gallery__btn { width: 44px; height: 44px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.25); background: rgba(255,255,255,0.06); color: #fff; font-size: 1.4rem; line-height: 1; cursor: pointer; transition: background 0.2s ease; }
+.mk-gallery__btn:hover { background: rgba(255,255,255,0.15); }
+@media (max-width: 640px) {
+  .mk-gallery__slide { width: 240px; height: 170px; }
+  .mk-gallery__nav { display: none; }
+}

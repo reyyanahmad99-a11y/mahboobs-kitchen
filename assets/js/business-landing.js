@@ -1,6 +1,14 @@
 (function () {
   "use strict";
 
+  var galleryTrack = document.getElementById("mkGalleryTrack");
+  var galleryPrev = document.getElementById("mkGalleryPrev");
+  var galleryNext = document.getElementById("mkGalleryNext");
+  if (galleryTrack && galleryPrev && galleryNext) {
+    galleryPrev.addEventListener("click", function () { galleryTrack.scrollBy({ left: -336, behavior: "smooth" }); });
+    galleryNext.addEventListener("click", function () { galleryTrack.scrollBy({ left: 336, behavior: "smooth" }); });
+  }
+
   var els = document.querySelectorAll(".reveal");
   if (!els.length) return;
 
