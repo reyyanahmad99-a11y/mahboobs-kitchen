@@ -35,6 +35,10 @@
     return "https://wa.me/" + digits + "?text=" + encodeURIComponent(message);
   }
 
+  function buildMailtoLink(email, subject, body) {
+    return "mailto:" + encodeURIComponent(email) + "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
+  }
+
   function insertCompanyWithRetry(client, payload, attemptsLeft) {
     var row = Object.assign({}, payload, { card_code: generateCardCode() });
     return client.from("companies").insert(row).select().single().then(function (res) {
@@ -60,6 +64,8 @@
     var companySelect = document.getElementById("companySelect");
     var historyPanel = document.getElementById("companyHistoryPanel");
     var whatsappTemplate = document.getElementById("whatsappTemplate");
+    var emailTemplate = document.getElementById("emailTemplate");
+    var emailSubjectTemplate = document.getElementById("emailSubjectTemplate");
     var offersList = document.getElementById("offersList");
     var offerRequestsList = document.getElementById("offerRequestsList");
     var allOffers = [];
@@ -75,9 +81,10 @@
         return;
       }
       var rows = companies.map(function (c) {
-        var action = c.phone
-          ? '<button type="button" class="btn btn--whatsapp" data-wa-id="' + c.id + '" style="padding:8px 16px;font-size:0.85rem;">✉ WhatsApp</button>'
-          : '<span class="muted">Keine Telefonnummer</span>';
+        var action =
+          (c.phone ? '<button type="button" class="btn btn--whatsapp" data-wa-id="' + c.id + '" style="padding:8px 16px;font-size:0.85rem;">✉ WhatsApp</button>' : "") +
+          (c.email ? '<button type="button" class="btn btn--dark" data-email-id="' + c.id + '" style="padding:8px 16px;font-size:0.85rem;margin-left:6px;">✉ E-Mail</button>' : "") +
+          (!c.phone && !c.email ? '<span class="muted">Keine Kontaktdaten</span>' : "");
         return (
           '<tr data-id="' + c.id + '">' +
           "<td>" + escapeHtml(c.company_name) + "</td>" +
@@ -105,6 +112,16 @@
           if (!company) return;
           var message = personalize(whatsappTemplate.value.trim(), company);
           window.open(buildWhatsAppLink(company.phone, message), "_blank");
+        });
+      });
+      Array.prototype.forEach.call(tableContainer.querySelectorAll("[data-email-id]"), function (btn) {
+        btn.addEventListener("click", function (e) {
+          e.stopPropagation();
+          var company = allCompanies.filter(function (c) { return c.id === btn.getAttribute("data-email-id"); })[0];
+          if (!company) return;
+          var subject = personalize(emailSubjectTemplate.value.trim(), company);
+          var body = personalize(emailTemplate.value.trim(), company);
+          window.location.href = buildMailtoLink(company.email, subject, body);
         });
       });
     }
@@ -200,6 +217,7 @@
           '<div class="btn-row" style="margin-top:8px;">' +
           '<button type="button" class="btn btn--dark" data-copy-offer="' + o.id + '" style="padding:8px 16px;font-size:0.85rem;">Link kopieren</button>' +
           '<button type="button" class="btn btn--whatsapp" data-prep-whatsapp="' + o.id + '" style="padding:8px 16px;font-size:0.85rem;">Für WhatsApp vorbereiten</button>' +
+          '<button type="button" class="btn btn--dark" data-prep-email="' + o.id + '" style="padding:8px 16px;font-size:0.85rem;">Für E-Mail vorbereiten</button>' +
           "</div></div>"
         );
       }).join("");
@@ -235,6 +253,17 @@
           whatsappTemplate.value = 'Hallo {{ansprechpartner}}, schauen Sie sich unser neues Angebot an: "' + offer.title + '" – ' + link;
           whatsappTemplate.scrollIntoView({ behavior: "smooth", block: "center" });
           whatsappTemplate.focus();
+        });
+      });
+      Array.prototype.forEach.call(offersList.querySelectorAll("[data-prep-email]"), function (btn) {
+        btn.addEventListener("click", function () {
+          var offer = allOffers.filter(function (o) { return o.id === btn.getAttribute("data-prep-email"); })[0];
+          if (!offer) return;
+          var link = window.location.origin + "/business/dashboard/?offer=" + offer.id;
+          emailSubjectTemplate.value = "Neues Angebot: " + offer.title;
+          emailTemplate.value = 'Hallo {{ansprechpartner}},\n\nschauen Sie sich unser neues Angebot an: "' + offer.title + '"\n' + link + "\n\nViele Grüße\nMahboobs Kitchen";
+          emailTemplate.scrollIntoView({ behavior: "smooth", block: "center" });
+          emailTemplate.focus();
         });
       });
     }
