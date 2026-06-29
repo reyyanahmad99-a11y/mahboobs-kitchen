@@ -266,16 +266,20 @@
       e.preventDefault();
       var name = document.getElementById("prospectName").value.trim();
       var category = document.getElementById("prospectCategory").value.trim() || "Firma";
-      var personName = document.getElementById("prospectPersonName").value.trim();
-      var personPhone = document.getElementById("prospectPersonPhone").value.trim();
+      var people = [
+        { name: document.getElementById("prospectPersonName").value.trim(), phone: document.getElementById("prospectPersonPhone").value.trim() },
+        { name: document.getElementById("prospectPersonName2").value.trim(), phone: document.getElementById("prospectPersonPhone2").value.trim() }
+      ].filter(function (person) { return person.name; });
       if (!name) return;
       addProspectStatus.textContent = "Wird angelegt …";
       addProspectStatus.className = "form-status";
       client.from("prospects").insert({ name: name, category: category }).select().single().then(function (res) {
         if (res.error) throw res.error;
         var prospect = res.data;
-        if (personName) {
-          return client.from("prospect_people").insert({ prospect_id: prospect.id, name: personName, phone: personPhone }).then(function () { return prospect; });
+        if (people.length) {
+          return Promise.all(people.map(function (person) {
+            return client.from("prospect_people").insert({ prospect_id: prospect.id, name: person.name, phone: person.phone });
+          })).then(function () { return prospect; });
         }
         return prospect;
       }).then(function () {
