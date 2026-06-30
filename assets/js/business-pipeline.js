@@ -120,6 +120,7 @@
     var historyEl = document.getElementById("prospectDetailHistory");
     var markCustomerBtn = document.getElementById("markCustomerBtn");
     var markLostBtn = document.getElementById("markLostBtn");
+    var deleteProspectBtn = document.getElementById("deleteProspectBtn");
     var conversionLinkBox = document.getElementById("conversionLinkBox");
     var conversionCompanyName = document.getElementById("conversionCompanyName");
     var conversionLink = document.getElementById("conversionLink");
@@ -409,9 +410,21 @@
 
     markLostBtn.addEventListener("click", function () {
       if (!selectedProspectId) return;
-      if (!window.confirm("Diesen Interessenten als 'Kein Interesse' markieren?")) return;
+      if (!window.confirm("Diesen Interessenten als 'Kein Interesse' markieren? Er kommt ins Archiv.")) return;
       client.from("prospects").update({ status: "lost" }).eq("id", selectedProspectId).then(function () {
         detailOverlay.hidden = true;
+        loadProspects();
+      });
+    });
+
+    deleteProspectBtn.addEventListener("click", function () {
+      if (!selectedProspectId) return;
+      var p = allProspects.filter(function (x) { return x.id === selectedProspectId; })[0];
+      if (!p) return;
+      if (!window.confirm('"' + p.name + '" komplett löschen? Das kann nicht rückgängig gemacht werden.')) return;
+      client.from("prospects").delete().eq("id", selectedProspectId).then(function () {
+        detailOverlay.hidden = true;
+        selectedProspectId = null;
         loadProspects();
       });
     });
