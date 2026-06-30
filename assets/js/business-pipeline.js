@@ -116,6 +116,7 @@
     var nextContactDate = document.getElementById("nextContactDate");
     var nextContactNotes = document.getElementById("nextContactNotes");
     var logContactBtn = document.getElementById("logContactBtn");
+    var logStatus = document.getElementById("logStatus");
     var historyEl = document.getElementById("prospectDetailHistory");
     var markCustomerBtn = document.getElementById("markCustomerBtn");
     var markLostBtn = document.getElementById("markLostBtn");
@@ -376,18 +377,32 @@
       var date = nextContactDate.value;
       var notes = nextContactNotes.value.trim();
       var prospectId = selectedProspectId;
-      client.from("prospect_contacts").insert({ prospect_id: prospectId, contact_date: todayISO(), notes: notes, next_contact_date: date || null }).then(function () {
+      logStatus.textContent = "Wird gespeichert …";
+      logStatus.className = "form-status";
+      client.from("prospect_contacts").insert({
+        prospect_id: prospectId,
+        contact_date: todayISO(),
+        notes: notes || null,
+        next_contact_date: date || null
+      }).then(function (res) {
+        if (res && res.error) throw res.error;
         var p = allProspects.filter(function (x) { return x.id === prospectId; })[0];
         var updates = { next_contact_date: date || null };
         if (p && p.status === "lead") updates.status = "contacted";
         return client.from("prospects").update(updates).eq("id", prospectId);
       }).then(function () {
         nextContactNotes.value = "";
+        nextContactDate.value = "";
+        logStatus.textContent = "Gespeichert ✓";
+        logStatus.className = "form-status form-status--ok";
         loadDailyCounter();
         loadHistory(prospectId);
         return loadProspects();
       }).then(function () {
         refreshDetailStatus();
+      }).catch(function (err) {
+        logStatus.textContent = "Fehler: " + (err && err.message ? err.message : "Speichern fehlgeschlagen");
+        logStatus.className = "form-status form-status--error";
       });
     });
 
